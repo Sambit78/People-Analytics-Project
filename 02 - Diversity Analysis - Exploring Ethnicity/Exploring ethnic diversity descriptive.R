@@ -24,20 +24,6 @@ library(foreign)
 library(qwraps2)
 library("ggpubr")
 
-# Plotly settings
-
-Sys.setenv("plotly_username"="sambitdas")
-Sys.setenv("plotly_api_key"="pinPJiUim7v1SM3N5kz1")
-
-
-p <- plot_ly(midwest, x = ~percollege, color = ~state, type = "box")
-#options(browser = 'false')
-api_create(p, filename = "r-docs-midwest-boxplots")
-
-
-library("migest")
-demo(cfplot_reg, package = "migest", ask = FALSE)
-
 
 #1.Read SPSS File ----
 
