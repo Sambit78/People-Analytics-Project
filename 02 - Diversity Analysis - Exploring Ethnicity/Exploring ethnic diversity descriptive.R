@@ -50,6 +50,9 @@ dataset %>%
   summarise_all(funs(sum(!is.na(.))))
 summary(dataset[,3:4])  
 
+StdDev(dataset$BAME)
+StdDev(dataset$PercentMale)
+
 # 3.Compare ethnicity and Gender across 2 functions ----
 # Sample T Test to compare if mean of BAME is different across 2 Functions
 
@@ -83,15 +86,20 @@ dataset %>%
             Mean = mean(BAME),
             StdDeviation = StdDev(BAME))
 
-# Variation of BAME between the Functions is statistically significant
+# Check the Normality Test 
+# Normality test concludes that the data is not normally distributed. Hence Wilcoxon rank test can be used
 
-var.test1 <- var.test(ProfessionalService_dataset$BAME, Sales_dataset$BAME)
-var.test1
+# Shapiro-Wilk normality test for Men's weights
+with(dataset, shapiro.test(BAME[Function == "Sales"]))# p = 0.1
+# Shapiro-Wilk normality test for Women's weights
+with(dataset, shapiro.test(BAME[Function == "Professional Service"])) # p = 0.6
 
-# Hence we use the Independent sample T test with Var Equal to False
 
-res <- t.test(Sales_dataset$BAME,ProfessionalService_dataset$BAME,  var.equal = FALSE)
-res
+# Conduct Wilcox Test on unpaired samples since BAME distribution is not normally distributed
+
+wilcox.test(Sales_dataset$BAME,ProfessionalService_dataset$BAME,paired = FALSE)
+
+
 
 # 3.3 Gender analysis across 2 functions ----
 # Showcase descriptive stats of BAME across both groups 
@@ -113,4 +121,7 @@ res <- t.test(Sales_dataset$PercentMale,ProfessionalService_dataset$PercentMale,
 res
 
 #https://www.rdocumentation.org/packages/lawstat/versions/3.2/topics/levene.test
+
+
+
 
