@@ -94,11 +94,9 @@ with(dataset, shapiro.test(BAME[Function == "Sales"]))# p = 0.1
 # Shapiro-Wilk normality test for Women's weights
 with(dataset, shapiro.test(BAME[Function == "Professional Service"])) # p = 0.6
 
-
 # Conduct Wilcox Test on unpaired samples since BAME distribution is not normally distributed
 
 wilcox.test(Sales_dataset$BAME,ProfessionalService_dataset$BAME,paired = FALSE)
-
 
 
 # 3.3 Gender analysis across 2 functions ----
