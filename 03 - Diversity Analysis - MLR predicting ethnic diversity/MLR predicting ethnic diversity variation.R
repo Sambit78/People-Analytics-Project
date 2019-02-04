@@ -21,6 +21,8 @@ library(tidyr)
 library(DataExplorer)
 library(UsingR)
 library(GGally)
+library(foreign)
+
 # Load the MASS library
 library(MASS)
 library(car)
@@ -48,6 +50,7 @@ keep.vars <- c('LondonorNot','Function','GroupSize','NumberFeMaleTeamLeads','Per
 # Note that the keep.vars are the COLUMNS that we want to keep, not the rows;
 
 skinny.df <- dataset[,keep.vars];
+glimpse(skinny.df)
 
 
 ####
@@ -83,7 +86,7 @@ summary(model)
 
 
 # Panel the plots
-par(mfrow = c(2, 2), oma = c(0, 0, 2, 0))
+par(mfrow = c(1, 2), oma = c(0, 0, 2, 0))
 plot(model)
 par(mfrow = c(1, 1), oma = c(0, 0, 2, 0))
 
@@ -134,4 +137,13 @@ test  <- predict(model,newdata = test.df)
 Measurement$MSETest <- mean((test.df$BAME - predict(model, test.df)) ^ 2)
 Measurement$MAETest <- mean(abs((test.df$BAME - predict(model, test.df)) ))
 Measurement
+
+#10. How do the 2 significant predictors impact BAME on a plot
+
+dataset %>% 
+  dplyr::select(BAME,LondonorNot,Function)%>%
+    ggpairs()
+
+
+
 
