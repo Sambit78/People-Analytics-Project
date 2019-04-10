@@ -1,0 +1,1035 @@
+\documentclass[]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={recruiting\_bias\_analysis.R},
+            pdfauthor={sambitdas},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{248,248,248}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.00,0.00,0.81}{#1}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.31,0.60,0.02}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.00,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.13,0.29,0.53}{\textbf{#1}}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.81,0.36,0.00}{\textbf{#1}}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textit{#1}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.77,0.63,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{\textbf{\textit{#1}}}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.94,0.16,0.16}{#1}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.64,0.00,0.00}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{recruiting\_bias\_analysis.R}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{sambitdas}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+      \predate{\centering\large\emph}
+  \postdate{\par}
+    \date{2019-04-10}
+
+
+\begin{document}
+\maketitle
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Set up Directory}
+
+\KeywordTok{setwd}\NormalTok{(}\StringTok{"~/Google Drive/Data Analytics/Predictive HR Analytics/People-Analytics-Project/05 - Recruiting Bias Analysis"}\NormalTok{)}
+
+
+\CommentTok{# 1. Loading Libraries , data files  ----}
+
+\CommentTok{# Libraries}
+\KeywordTok{library}\NormalTok{(tidyverse)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## -- Attaching packages ---------------------------------------------------------------------------------------------------------------------------------------------------------- tidyverse 1.2.1 --
+\end{verbatim}
+
+\begin{verbatim}
+## v ggplot2 3.1.1       v purrr   0.3.2  
+## v tibble  2.1.1       v dplyr   0.8.0.1
+## v tidyr   0.8.3       v stringr 1.4.0  
+## v readr   1.3.1       v forcats 0.4.0
+\end{verbatim}
+
+\begin{verbatim}
+## -- Conflicts ------------------------------------------------------------------------------------------------------------------------------------------------------------- tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(tidyquant)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: lubridate
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'lubridate'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:base':
+## 
+##     date
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: PerformanceAnalytics
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: xts
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: zoo
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'zoo'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:base':
+## 
+##     as.Date, as.Date.numeric
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'xts'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     first, last
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'PerformanceAnalytics'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:graphics':
+## 
+##     legend
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: quantmod
+\end{verbatim}
+
+\begin{verbatim}
+## Loading required package: TTR
+\end{verbatim}
+
+\begin{verbatim}
+## Version 0.4-0 included new data defaults. See ?getSymbols.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(readxl)}
+\KeywordTok{library}\NormalTok{(forcats)}
+\KeywordTok{library}\NormalTok{(stringr)}
+\CommentTok{# install.packages('caTools')}
+\KeywordTok{library}\NormalTok{(caTools)}
+\KeywordTok{library}\NormalTok{(ROCR) }\CommentTok{# for the ROC/ AUC measure}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: gplots
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'gplots'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:PerformanceAnalytics':
+## 
+##     textplot
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:stats':
+## 
+##     lowess
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(pROC) }\CommentTok{# for the ROC/ AUC measure}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Type 'citation("pROC")' for a citation.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'pROC'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stats':
+## 
+##     cov, smooth, var
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(rattle) }\CommentTok{# Visualization of Decision Trees}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Rattle: A free graphical interface for data science with R.
+## Version 5.2.0 Copyright (c) 2006-2018 Togaware Pty Ltd.
+## Type 'rattle()' to shake, rattle, and roll your data.
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(rpart.plot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: rpart
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(RColorBrewer)}
+\KeywordTok{library}\NormalTok{(psych) }\CommentTok{# for point biserial correlation}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'psych'
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:ggplot2':
+## 
+##     %+%, alpha
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(}\StringTok{"caret"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: lattice
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'caret'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     lift
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(}\StringTok{"GGally"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Attaching package: 'GGally'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     nasa
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{library}\NormalTok{(janitor)}
+\CommentTok{#install.packages("corrplot")}
+\KeywordTok{library}\NormalTok{(corrplot)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## corrplot 0.84 loaded
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#install.packages('e1071', dependencies=TRUE)}
+\CommentTok{#install.packages("car")}
+\KeywordTok{library}\NormalTok{(car)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Loading required package: carData
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'car'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:psych':
+## 
+##     logit
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:dplyr':
+## 
+##     recode
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:purrr':
+## 
+##     some
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#install.packages("expss")}
+\KeywordTok{library}\NormalTok{(expss)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Use 'expss_output_viewer()' to display tables in the RStudio Viewer.
+##  To return to the console output, use 'expss_output_default()'.
+\end{verbatim}
+
+\begin{verbatim}
+## 
+## Attaching package: 'expss'
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:car':
+## 
+##     recode
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:xts':
+## 
+##     first, last
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:stringr':
+## 
+##     fixed, regex
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:dplyr':
+## 
+##     between, compute, first, last, na_if, recode, vars
+\end{verbatim}
+
+\begin{verbatim}
+## The following objects are masked from 'package:purrr':
+## 
+##     keep, modify, modify_if, transpose
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:tidyr':
+## 
+##     nest
+\end{verbatim}
+
+\begin{verbatim}
+## The following object is masked from 'package:ggplot2':
+## 
+##     vars
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Load Data}
+
+\NormalTok{my_data <-}\StringTok{ }\KeywordTok{read.delim}\NormalTok{(}\StringTok{"Chapter8APPLICANTS.txt"}\NormalTok{)}
+\KeywordTok{glimpse}\NormalTok{(my_data)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Observations: 280
+## Variables: 9
+## $ ApplicantCode <int> 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 1...
+## $ Gender        <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ ATSIyn        <int> 2, 2, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 2, ...
+## $ ShortlistedNY <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, ...
+## $ Interviewed   <int> 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, ...
+## $ FemaleONpanel <int> 1, 1, 1, 2, 2, 2, 2, 1, 1, NA, NA, NA, NA, NA, N...
+## $ OfferNY       <int> 1, 1, 1, 1, 0, 0, 0, 0, 0, NA, NA, NA, NA, NA, N...
+## $ AcceptNY      <int> 1, 1, 1, 1, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+## $ JoinYN        <int> 1, 1, 1, 1, NA, NA, NA, NA, NA, NA, NA, NA, NA, ...
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 2 Descriptive Statistics ----}
+
+\CommentTok{# 2.1 Applicant Pool by Gender ----}
+
+\NormalTok{my_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ApplicantCode,Gender)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Gender) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percent =}\NormalTok{ n }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(n)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Gender =} \KeywordTok{factor}\NormalTok{(Gender, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Male"}\NormalTok{,}\StringTok{"Female"}\NormalTok{))) }\OperatorTok{%>%}
+\StringTok{    }\KeywordTok{adorn_totals}\NormalTok{(}\StringTok{"row"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  Gender   n   Percent
+##    Male  78  27.85714
+##  Female 202  72.14286
+##   Total 280 100.00000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 2.2. Applicant Pool by Aboriginal Torres Strait Islander Yes or No ----}
+
+\NormalTok{my_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ApplicantCode,ATSIyn)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(ATSIyn) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percent =}\NormalTok{ n }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(n)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{ATSIyn =} \KeywordTok{factor}\NormalTok{(ATSIyn, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Aboriginal Torres Strait Islander"}\NormalTok{,}\StringTok{"General"}\NormalTok{)))}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{adorn_totals}\NormalTok{(}\StringTok{"row"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                             ATSIyn   n   Percent
+##  Aboriginal Torres Strait Islander 121  43.21429
+##                            General 159  56.78571
+##                              Total 280 100.00000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 2.3. Applicants Rejected or Shortlisted ----}
+
+\NormalTok{my_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ApplicantCode,ShortlistedNY)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(ShortlistedNY) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percent =}\NormalTok{ n }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(n)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{adorn_totals}\NormalTok{(}\StringTok{"row"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  ShortlistedNY   n   Percent
+##              0 192  68.57143
+##              1  88  31.42857
+##          Total 280 100.00000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 2.4. Applicants Interviewed ----}
+
+\NormalTok{my_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ApplicantCode,Interviewed)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(Interviewed) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percent =}\NormalTok{ n }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(n)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Interviewed =} \KeywordTok{factor}\NormalTok{(Interviewed, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Not Interviewed"}\NormalTok{,}\StringTok{"Interviewed"}\NormalTok{)))}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{adorn_totals}\NormalTok{(}\StringTok{"row"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      Interviewed   n   Percent
+##  Not Interviewed 225  80.35714
+##      Interviewed  55  19.64286
+##            Total 280 100.00000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 2.5. Female Member on the interview panel ----}
+
+\NormalTok{my_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ApplicantCode,FemaleONpanel)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{na.omit}\NormalTok{()}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(FemaleONpanel) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percent =}\NormalTok{ n }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(n)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{FemaleONpanel =} \KeywordTok{factor}\NormalTok{(FemaleONpanel, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Male Only"}\NormalTok{,}\StringTok{"Female Panel member"}\NormalTok{)))}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{adorn_totals}\NormalTok{(}\StringTok{"row"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##        FemaleONpanel  n Percent
+##            Male Only 33      60
+##  Female Panel member 22      40
+##                Total 55     100
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 2.6. Made an Offer ----}
+
+\NormalTok{my_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ApplicantCode,OfferNY)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{na.omit}\NormalTok{()}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(OfferNY) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percent =}\NormalTok{ n }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(n)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{OfferNY =} \KeywordTok{factor}\NormalTok{(OfferNY, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Offer Not Made"}\NormalTok{,}\StringTok{"Offer Made"}\NormalTok{)))}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{adorn_totals}\NormalTok{(}\StringTok{"row"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         OfferNY  n   Percent
+##  Offer Not Made 27  49.09091
+##      Offer Made 28  50.90909
+##           Total 55 100.00000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 2.7. Accepted ----}
+
+\NormalTok{my_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ApplicantCode,AcceptNY)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{na.omit}\NormalTok{()}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(AcceptNY) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percent =}\NormalTok{ n }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(n)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{AcceptNY =} \KeywordTok{factor}\NormalTok{(AcceptNY, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Declined"}\NormalTok{,}\StringTok{"Accepted"}\NormalTok{)))}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{adorn_totals}\NormalTok{(}\StringTok{"row"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##  AcceptNY  n   Percent
+##  Declined 10  35.71429
+##  Accepted 18  64.28571
+##     Total 28 100.00000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 2.8. Joined or Not  ----}
+
+\NormalTok{my_data }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{select}\NormalTok{(ApplicantCode,JoinYN)}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{na.omit}\NormalTok{()}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{group_by}\NormalTok{(JoinYN) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{summarize}\NormalTok{(}\DataTypeTok{n =} \KeywordTok{n}\NormalTok{()) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{ungroup}\NormalTok{() }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{Percent =}\NormalTok{ n }\OperatorTok{/}\StringTok{ }\KeywordTok{sum}\NormalTok{(n)}\OperatorTok{*}\DecValTok{100}\NormalTok{) }\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{mutate}\NormalTok{(}\DataTypeTok{JoinYN =} \KeywordTok{factor}\NormalTok{(JoinYN, }\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Not Joined"}\NormalTok{,}\StringTok{"Joined"}\NormalTok{)))}\OperatorTok{%>%}
+\StringTok{  }\KeywordTok{adorn_totals}\NormalTok{(}\StringTok{"row"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##      JoinYN  n   Percent
+##  Not Joined 10  35.71429
+##      Joined 18  64.28571
+##       Total 28 100.00000
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 3 Influence of ATSI on applicants shortlisting ----}
+\CommentTok{# Creating crosstab table }
+
+\NormalTok{tbl =}\StringTok{ }\KeywordTok{table}\NormalTok{(}\KeywordTok{factor}\NormalTok{(my_data}\OperatorTok{$}\NormalTok{ATSIyn,}\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Aboriginal Torres Strait Islander"}\NormalTok{,}\StringTok{"General Applicant"}\NormalTok{)),}\KeywordTok{factor}\NormalTok{(my_data}\OperatorTok{$}\NormalTok{ShortlistedNY,}
+                                                                      \DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Not Shortlisted"}\NormalTok{,}\StringTok{"Shortlisted"}\NormalTok{)))}
+\KeywordTok{addmargins}\NormalTok{(tbl)                 }\CommentTok{# the contingency table }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                    
+##                                     Not Shortlisted Shortlisted Sum
+##   Aboriginal Torres Strait Islander             102          19 121
+##   General Applicant                              90          69 159
+##   Sum                                           192          88 280
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#prop.table(tbl)}
+
+\NormalTok{?balloonplot}
+\KeywordTok{balloonplot}\NormalTok{(}\KeywordTok{t}\NormalTok{(tbl), }\DataTypeTok{main =}\StringTok{"Applicants Ethnicity background relation with Shortlisted status "}\NormalTok{, }\DataTypeTok{xlab =}\StringTok{""}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{""}\NormalTok{,}
+            \DataTypeTok{label =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{show.margins =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{recruiting_bias_analysis_files/figure-latex/unnamed-chunk-1-1.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Chi-square statistic can be easily computed using the function chisq.test() as follow:}
+\CommentTok{# Result is statistically significant. Hence we can reject the hypothesis and conclude}
+\CommentTok{# bias exists }
+
+\NormalTok{expectedp <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{chisq <-}\StringTok{ }\KeywordTok{chisq.test}\NormalTok{(tbl,}\DataTypeTok{p=}\NormalTok{expectedp)}
+\CommentTok{# Determine the expected and observed results}
+\KeywordTok{round}\NormalTok{(chisq}\OperatorTok{$}\NormalTok{expected,}\DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                    
+##                                     Not Shortlisted Shortlisted
+##   Aboriginal Torres Strait Islander              83          38
+##   General Applicant                             109          50
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{round}\NormalTok{(chisq}\OperatorTok{$}\NormalTok{observed,}\DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                    
+##                                     Not Shortlisted Shortlisted
+##   Aboriginal Torres Strait Islander             102          19
+##   General Applicant                              90          69
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Residuals}
+
+\CommentTok{#If you want to know the most contributing cells to the total Chi-square score, }
+\CommentTok{#you just have to calculate the Chi-square statistic for each cell:}
+
+\CommentTok{#Positive residuals are in blue. Positive values in cells specify an attraction }
+\CommentTok{#(positive association) between the corresponding row and column variables.}
+\CommentTok{#Negative residuals are in red. This implies a repulsion (negative association) }
+\CommentTok{#between the corresponding row and column variables. }
+
+\KeywordTok{round}\NormalTok{(chisq}\OperatorTok{$}\NormalTok{residuals, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                    
+##                                     Not Shortlisted Shortlisted
+##   Aboriginal Torres Strait Islander           2.089      -3.086
+##   General Applicant                          -1.822       2.692
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{corrplot}\NormalTok{(chisq}\OperatorTok{$}\NormalTok{residuals, }\DataTypeTok{is.cor =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{recruiting_bias_analysis_files/figure-latex/unnamed-chunk-1-2.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Contibution in percentage (%) to the chi-square score}
+\NormalTok{contrib <-}\StringTok{ }\DecValTok{100}\OperatorTok{*}\NormalTok{chisq}\OperatorTok{$}\NormalTok{residuals}\OperatorTok{^}\DecValTok{2}\OperatorTok{/}\NormalTok{chisq}\OperatorTok{$}\NormalTok{statistic}
+\KeywordTok{round}\NormalTok{(contrib, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##                                    
+##                                     Not Shortlisted Shortlisted
+##   Aboriginal Torres Strait Islander          18.823      41.069
+##   General Applicant                          14.325      31.254
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Visualize the contribution}
+\KeywordTok{corrplot}\NormalTok{(contrib, }\DataTypeTok{is.cor =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{recruiting_bias_analysis_files/figure-latex/unnamed-chunk-1-3.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 4 Influence of Gender on shortlisting  ----}
+\CommentTok{# Creating crosstab table }
+
+\NormalTok{tbl =}\StringTok{ }\KeywordTok{table}\NormalTok{(}\KeywordTok{factor}\NormalTok{(my_data}\OperatorTok{$}\NormalTok{Gender,}\DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Male"}\NormalTok{,}\StringTok{"Female"}\NormalTok{)),}\KeywordTok{factor}\NormalTok{(my_data}\OperatorTok{$}\NormalTok{ShortlistedNY,}
+                                                                      \DataTypeTok{labels =} \KeywordTok{c}\NormalTok{(}\StringTok{"Not Shortlisted"}\NormalTok{,}\StringTok{"Shortlisted"}\NormalTok{)))}
+\KeywordTok{addmargins}\NormalTok{(tbl)                 }\CommentTok{# the contingency table }
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         
+##          Not Shortlisted Shortlisted Sum
+##   Male                40          38  78
+##   Female             152          50 202
+##   Sum                192          88 280
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#prop.table(tbl)}
+
+\NormalTok{?balloonplot}
+\KeywordTok{balloonplot}\NormalTok{(}\KeywordTok{t}\NormalTok{(tbl), }\DataTypeTok{main =}\StringTok{"Applicants Shortlisted by Gender"}\NormalTok{, }\DataTypeTok{xlab =}\StringTok{""}\NormalTok{, }\DataTypeTok{ylab=}\StringTok{""}\NormalTok{,}
+            \DataTypeTok{label =} \OtherTok{FALSE}\NormalTok{, }\DataTypeTok{show.margins =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{recruiting_bias_analysis_files/figure-latex/unnamed-chunk-1-4.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Chi-square statistic can be easily computed using the function chisq.test() as follow:}
+\CommentTok{# Result is statistically significant. Hence we can reject the hypothesis and conclude}
+\CommentTok{# bias exists }
+
+\NormalTok{expectedp <-}\StringTok{ }\KeywordTok{c}\NormalTok{(}\FloatTok{0.5}\NormalTok{,}\FloatTok{0.5}\NormalTok{)}
+\NormalTok{chisq <-}\StringTok{ }\KeywordTok{chisq.test}\NormalTok{(tbl,}\DataTypeTok{p=}\NormalTok{expectedp)}
+\CommentTok{# Determine the expected and observed results}
+\KeywordTok{round}\NormalTok{(chisq}\OperatorTok{$}\NormalTok{expected,}\DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         
+##          Not Shortlisted Shortlisted
+##   Male                53          25
+##   Female             139          63
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{round}\NormalTok{(chisq}\OperatorTok{$}\NormalTok{observed,}\DecValTok{0}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         
+##          Not Shortlisted Shortlisted
+##   Male                40          38
+##   Female             152          50
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Residuals}
+
+\CommentTok{#If you want to know the most contributing cells to the total Chi-square score, }
+\CommentTok{#you just have to calculate the Chi-square statistic for each cell:}
+
+\CommentTok{#Positive residuals are in blue. Positive values in cells specify an attraction }
+\CommentTok{#(positive association) between the corresponding row and column variables.}
+\CommentTok{#Negative residuals are in red. This implies a repulsion (negative association) }
+\CommentTok{#between the corresponding row and column variables. }
+
+\KeywordTok{round}\NormalTok{(chisq}\OperatorTok{$}\NormalTok{residuals, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         
+##          Not Shortlisted Shortlisted
+##   Male            -1.844       2.724
+##   Female           1.146      -1.693
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\KeywordTok{corrplot}\NormalTok{(chisq}\OperatorTok{$}\NormalTok{residuals, }\DataTypeTok{is.cor =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{recruiting_bias_analysis_files/figure-latex/unnamed-chunk-1-5.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Contibution in percentage (%) to the chi-square score}
+\NormalTok{contrib <-}\StringTok{ }\DecValTok{100}\OperatorTok{*}\NormalTok{chisq}\OperatorTok{$}\NormalTok{residuals}\OperatorTok{^}\DecValTok{2}\OperatorTok{/}\NormalTok{chisq}\OperatorTok{$}\NormalTok{statistic}
+\KeywordTok{round}\NormalTok{(contrib, }\DecValTok{3}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##         
+##          Not Shortlisted Shortlisted
+##   Male            24.453      53.352
+##   Female           9.442      20.601
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Visualize the contribution}
+\KeywordTok{corrplot}\NormalTok{(contrib, }\DataTypeTok{is.cor =} \OtherTok{FALSE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\includegraphics{recruiting_bias_analysis_files/figure-latex/unnamed-chunk-1-6.pdf}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 5 Logistic Regression to predict Shortlisting of candidates ----}
+
+\CommentTok{# 5.1 Fitting Logistic Regression to the Training set ----}
+\KeywordTok{set.seed}\NormalTok{(}\DecValTok{7}\NormalTok{)}
+\NormalTok{fit.glm <-}\StringTok{ }\KeywordTok{glm}\NormalTok{(ShortlistedNY }\OperatorTok{~}\StringTok{ }\NormalTok{Gender }\OperatorTok{+}\StringTok{ }\NormalTok{ATSIyn,}\DataTypeTok{family=}\KeywordTok{binomial}\NormalTok{(}\StringTok{"logit"}\NormalTok{),}\DataTypeTok{data =}\NormalTok{ my_data)}
+\KeywordTok{summary}\NormalTok{(fit.glm)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## 
+## Call:
+## glm(formula = ShortlistedNY ~ Gender + ATSIyn, family = binomial("logit"), 
+##     data = my_data)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.4371  -0.9342  -0.4764   0.9382   2.1130  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(>|z|)    
+## (Intercept)  -1.2432     0.6777  -1.834   0.0666 .  
+## Gender       -1.1957     0.3006  -3.978 6.94e-05 ***
+## ATSIyn        1.5157     0.3096   4.895 9.83e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 348.59  on 279  degrees of freedom
+## Residual deviance: 306.61  on 277  degrees of freedom
+## AIC: 312.61
+## 
+## Number of Fisher Scoring iterations: 4
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# Check Collinearity}
+
+\KeywordTok{sort}\NormalTok{(}\KeywordTok{vif}\NormalTok{(fit.glm), }\DataTypeTok{decreasing =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+##   Gender   ATSIyn 
+## 1.030169 1.030169
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{# 5.2 Check Anova to analyze the model of deviance ----}
+
+\KeywordTok{anova}\NormalTok{(fit.glm, }\DataTypeTok{test=}\StringTok{"Chisq"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## Analysis of Deviance Table
+## 
+## Model: binomial, link: logit
+## 
+## Response: ShortlistedNY
+## 
+## Terms added sequentially (first to last)
+## 
+## 
+##        Df Deviance Resid. Df Resid. Dev  Pr(>Chi)    
+## NULL                     279     348.59              
+## Gender  1   14.435       278     334.16 0.0001451 ***
+## ATSIyn  1   27.545       277     306.61 1.535e-07 ***
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+\end{verbatim}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{#for nagelkereke install and load rcompanion package}
+\CommentTok{#install.packages("rcompanion") }
+\KeywordTok{library}\NormalTok{(rcompanion)}
+\KeywordTok{nagelkerke}\NormalTok{(fit.glm, }\DataTypeTok{null =} \OtherTok{NULL}\NormalTok{, }\DataTypeTok{restrictNobs =} \OtherTok{TRUE}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+## $Models
+##                                                                            
+## Model: "glm, ShortlistedNY ~ Gender + ATSIyn, binomial(\"logit\"), my_data"
+## Null:  "glm, ShortlistedNY ~ 1, binomial(\"logit\"), fit$model"            
+## 
+## $Pseudo.R.squared.for.model.vs.null
+##                              Pseudo.R.squared
+## McFadden                             0.120428
+## Cox and Snell (ML)                   0.139231
+## Nagelkerke (Cragg and Uhler)         0.195535
+## 
+## $Likelihood.ratio.test
+##  Df.diff LogLik.diff Chisq    p.value
+##       -2      -20.99 41.98 7.6581e-10
+## 
+## $Number.of.observations
+##           
+## Model: 280
+## Null:  280
+## 
+## $Messages
+## [1] "Note: For models fit with REML, these statistics are based on refitting with ML"
+## 
+## $Warnings
+## [1] "None"
+\end{verbatim}
+
+
+\end{document}
